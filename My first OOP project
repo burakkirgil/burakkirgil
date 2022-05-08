@@ -1,0 +1,178 @@
+
+public class Medal {
+	
+	private String type; 
+	private double radius;
+	private double thickness;
+	private static double pricePerGramOfGold = 917;
+	private static double pricePerGramOfSilver = 11.66;
+	private static double pricePerGramOfBronze = 0.142;
+	final static double densityOfGold = 19.3; 
+    final static double densityOfSilver = 10.49;
+    final static double densityOfBronze = 8.73;
+    public Medal(String type, double radius, double thickness) { // three parameter constructor 		       		    	    	
+    	if(!type.equalsIgnoreCase( "gold") && !type.equalsIgnoreCase( "silver"))  {
+    		type = "bronze";    		
+    }
+    	this.type = type;
+    	this.radius = radius;
+    	this.thickness = thickness;    	
+    }
+	public Medal(String type) { // one parameter constructor
+    	this(type,1,0.2);
+    }
+	public Medal() { // no-argument constructor
+		this("bronze",1,0.2);
+	}
+	public Medal(Medal medal) { // copying object constructor
+		this(medal.getType(), medal.getRadius(), medal.getThickness());
+	}   
+	public String getType() {
+		return type;
+	}	
+	public double getRadius() {
+		return radius;
+	}
+
+	public void setRadius(double radius) {
+		this.radius = radius < 0 ? 0 : radius;
+	}
+
+	public double getThickness() {
+		return thickness;
+	}
+
+	public void setThickness(double thickness) {
+		
+		this.thickness = thickness < 0 ? 0 : thickness;
+	}
+	public void setMadel(double radius, double thickness) {
+		setRadius(radius);
+		setThickness(thickness);
+		
+	}
+	public void setMadel() {
+		setRadius(1);
+		setThickness(0.2);
+	}
+	public static void setGoldPrice(double price) {
+		pricePerGramOfGold = price;		
+	}	
+	public static void setSilverPrice(double price) {
+		pricePerGramOfSilver = price;	    
+	}    
+	public static void setBronzePrice(double price) {		
+		pricePerGramOfBronze = price;		
+	}
+	public static double getGoldPrice() {
+		return pricePerGramOfGold;			
+	}
+	public static double getSilverPrice() {
+		return pricePerGramOfSilver;			
+	}	
+	public static double getBronzePrice() {
+		return pricePerGramOfBronze;			
+	}
+	public double volume() {			
+	    return Math.PI * (radius*radius) * this.thickness;    
+	}
+	public double mass() {
+		if(type.equalsIgnoreCase("gold")) {
+			return densityOfGold * volume();
+		}
+		else if(type.equalsIgnoreCase("silver")) {
+			return densityOfSilver * volume();
+		}
+		else {
+			return densityOfBronze * volume();
+		}
+	}
+	public double value() {		
+		if(type.equalsIgnoreCase("gold")) {
+			return pricePerGramOfGold * mass();
+		}
+		if(type.equalsIgnoreCase("silver")) {
+			return pricePerGramOfSilver * mass();
+		}
+		else {
+			return pricePerGramOfBronze * mass();
+		}
+		
+		
+	}
+	public String toString() {
+		return "Type of Medal = "+type+
+				"\nRadius of Medal = "+radius+" cm"+
+				"\nThickness of Medal = "+thickness+" cm"+
+				"\nValue of Medal = "+String.format("%.10f" , value())+" TL"; 
+	}
+	public void display() {
+		System.out.println(this.toString());
+		
+	}
+	public static double volumeStat(Medal medal) {
+		
+		double volume = Math.PI * medal.getRadius() * medal.getThickness();
+		return volume;		
+	}
+	public static double massStat(Medal medal) {
+		if(medal.type.equalsIgnoreCase("gold")) {
+			return densityOfGold * volumeStat(medal);
+		}
+		else if(medal.type.equalsIgnoreCase("silver")) {
+			return densityOfSilver * volumeStat(medal);
+		}
+		else {
+			return densityOfBronze * volumeStat(medal);
+		}
+	}
+	public static double valueStat(Medal medal) {
+		if(medal.type.equalsIgnoreCase("gold")) {
+			return pricePerGramOfGold * massStat(medal);
+		}
+		if(medal.type.equalsIgnoreCase("silver")) {
+			return pricePerGramOfSilver * massStat(medal);
+		}
+		else {
+			return pricePerGramOfBronze * massStat(medal);
+		}
+	}	
+}
+
+public class test {
+
+	public static void main(String[] args) {
+		Medal[] medals = new Medal[6];
+		medals[0] = new Medal("gold", 10, 5);
+		medals[1] = new Medal();
+		medals[2] = new Medal("silver");
+		medals[3] = new Medal(medals[0]);
+        
+		double totalVolume = 0;
+		double totalMass = 0;
+		double totalValue = 0;
+		for(Medal medal : medals) {
+			if(medal == null) continue;
+			totalVolume += Medal.volumeStat(medal);
+			totalMass += Medal.massStat(medal);
+			totalValue += Medal.valueStat(medal);
+		}
+		System.out.println("Total Volume = "+ totalVolume  + "\nTotal Mass = "+totalMass+"\nTotal Value = " + totalValue);
+		System.out.println("*******************************************************************************************");
+		double totalVolume2 = 0;
+		double totalMass2 = 0;
+		double totalValue2 = 0;		
+		for(Medal medal : medals) {
+			if(medal == null) continue;	
+			totalVolume2 += medal.volume();
+			totalMass2 += medal.mass();
+			totalValue2 += medal.value();
+		}
+		for( int a = 0 ; a < medals.length ; a++) {
+			if(medals[a] == null) continue;
+			System.out.println("Medal "+ (a+1));
+			medals[a].display();
+			System.out.println("*******************************************************************************************");		}
+        	}
+
+}
